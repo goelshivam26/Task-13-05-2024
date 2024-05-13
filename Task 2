@@ -1,0 +1,143 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+//Solar panel class
+class SolarPanels {
+    int solar_energy;
+public:
+    SolarPanels(int energy) : solar_energy(energy) {}
+
+    //Getter Method
+    int get_solar_energy() {
+        return solar_energy;
+    }
+};
+
+//base class for all inverters
+class Inverter {
+protected:
+    int power_rating;
+
+public:
+    Inverter(int power) : power_rating(power) {}
+    virtual int calculate_power() = 0;
+};
+
+//child class of inverter class
+class SolarInverter : public Inverter {
+protected:
+    bool has_battery;
+    SolarPanels* solar_panels;
+
+public:
+    SolarInverter(int power, bool battery) : Inverter(power), has_battery(battery), solar_panels(nullptr) {}
+
+    void connect_solar_panels(SolarPanels* panels) {
+        solar_panels = panels;
+    }
+   
+   //override (polymorphism)
+    virtual int calculate_power() override {
+        if (solar_panels) {
+            return power_rating * solar_panels->get_solar_energy();
+        } else {
+            return 0;
+        }
+    }
+};
+
+//child class of inverter class
+class NonSolarInverter : public Inverter {
+protected:
+    bool has_battery;
+
+public:
+    NonSolarInverter(int power, bool battery = true) : Inverter(power), has_battery(battery) {}
+
+    virtual int calculate_power() override {
+        return power_rating;
+    }
+};
+
+class GridOn {};
+
+class PCU : public SolarInverter {
+    GridOn* grid_on;
+
+public:
+    PCU(int power) : SolarInverter(power, true), grid_on(nullptr) {}
+
+    void set_grid_on(GridOn* grid) {
+        grid_on = grid;
+    }
+};
+
+class GTI : public SolarInverter {
+    GridOn grid_on;
+
+public:
+    GTI(int power) : SolarInverter(power, false) {}
+
+    virtual int calculate_power() override {
+        if (solar_panels && &grid_on) {
+            return SolarInverter::calculate_power(); // Power from solar panels only
+        } else {
+            return 0;
+        }
+    }
+};
+
+class Regalia : public SolarInverter {
+    GridOn grid_on;
+
+public:
+    Regalia(int power) : SolarInverter(power, true) {}
+};
+
+class Cruze : public NonSolarInverter {
+public:
+    Cruze(int power) : NonSolarInverter(power) {}
+
+    virtual int calculate_power() override {
+        return power_rating;
+    }
+};
+
+class Zelio : public NonSolarInverter {
+public:
+    Zelio(int power) : NonSolarInverter(power) {}
+
+    virtual int calculate_power() override {
+        return power_rating;
+    }
+};
+
+int main() {
+    SolarPanels solar_panels(1000);
+
+    PCU pcu(5000);
+    pcu.connect_solar_panels(&solar_panels);
+
+    GridOn grid;
+    pcu.set_grid_on(&grid);
+
+    GTI gti(4000);
+    gti.connect_solar_panels(&solar_panels);
+
+    Regalia regalia(6000);
+    regalia.connect_solar_panels(&solar_panels);
+
+    Cruze cruze(3000);
+    Zelio zelio(2000);
+
+    cout << "PCU Power: " << pcu.calculate_power() << std::endl;
+    cout << "GTI Power: " << gti.calculate_power() << std::endl;
+    cout << "Regalia Power: " << regalia.calculate_power() << std::endl;
+    cout << "Cruze Power: " << cruze.calculate_power() << std::endl;
+    cout << "Zelio Power: " << zelio.calculate_power() << std::endl;
+
+    return 0;
+}
+
+
+
