@@ -1,0 +1,127 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+// Mp class
+class MP
+{
+public:
+    string name;
+    int age;
+    string constituency;
+    string driver;
+    int expenditure;
+    string designation;
+
+    // Constructor of mp
+public:
+    MP(string name, int age, string constituency, string driver, int expenditure, string designation)
+        : name(name), age(age), constituency(constituency), driver(driver), expenditure(expenditure), designation(designation) {}
+
+    // Getter methods
+    string getConstituency()
+    {
+        return constituency;
+    }
+
+    string getDriver()
+    {
+        return driver;
+    }
+
+    // Virtual Function
+    virtual bool exceedsSpendingLimit()
+    {
+        return expenditure >= 100000;
+    }
+
+    // Setter method
+    void setExpenditure(int value)
+    {
+        expenditure = value;
+    }
+};
+
+// Sub Class of MP
+class Minister : public MP
+{
+
+    // Constructor of minister
+public:
+    Minister(string name, int age, string constituency, string driver, int expenditure, string designation)
+        : MP(name, age, constituency, driver, expenditure, designation) {}
+
+    // override exceedsspendinglimit(virtual function in base class)
+    bool exceedsSpendingLimit() override
+    {
+        return expenditure >= 1000000;
+    }
+};
+
+// Subclass of Minister
+class Pm : public Minister
+{
+    string air_driver;
+
+    // constructor of pm
+public:
+    Pm(string name, int age, string constituency, string driver, int expenditure, string designation, string air_driver)
+        : Minister(name, age, constituency, driver, expenditure, designation), air_driver(air_driver) {}
+
+    // Getter method
+    string getAirDriver()
+    {
+        return air_driver;
+    }
+
+    // override exceedsspendinglimit(virtual function in base class)
+    bool exceedsSpendingLimit() override
+    {
+        return expenditure >= 10000000;
+    }
+};
+
+// Comissioner Class
+class Commissioner
+{
+public:
+    string canArrest(MP *obj)
+    {
+        if (obj->designation == "PM")
+        {
+            return "Can't be Arrested";
+        }
+        else if (obj->designation == "Minister" && obj->exceedsSpendingLimit() == 1)
+        {
+            return "It can be decided by PM";
+        }
+        else if (obj->designation == "Minister" && obj->exceedsSpendingLimit() == 0)
+        {
+            return "Can't Arrest";
+        }
+        else
+        {
+            if (obj->exceedsSpendingLimit())
+            {
+                return "Arrest";
+            }
+            else
+            {
+                return "Can't Arrest";
+            }
+        }
+    }
+};
+
+int main()
+{
+    Pm pm1("Narendra Modi", 74, "Ahmedabad", "Gaur", 100000000, "PM", "ABC");
+    MP mp1("Amit Shah", 60, "Nagar", "David", 100000000, "MP");
+    Minister mn1("Rajnath Singh", 65, "patna", "lovish", 10000000, "Minister");
+    Commissioner com;
+
+    cout << "Can arrest PM: " << com.canArrest(&pm1) << endl;
+    cout << "Can arrest MP: " << com.canArrest(&mp1) << endl;
+    cout << "Can arrest Minister: " << com.canArrest(&mn1) << endl;
+
+    return 0;
+}
