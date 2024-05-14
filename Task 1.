@@ -60,17 +60,17 @@ public:
 // Subclass of Minister
 class Pm : public Minister
 {
-    string air_driver;
+    string pilot;
 
     // constructor of pm
 public:
-    Pm(string name, int age, string constituency, string driver, int expenditure, string designation, string air_driver)
-        : Minister(name, age, constituency, driver, expenditure, designation), air_driver(air_driver) {}
+    Pm(string name, int age, string constituency, string driver, int expenditure, string designation, string pilot)
+        : Minister(name, age, constituency, driver, expenditure, designation), pilot(pilot) {}
 
     // Getter method
-    string getAirDriver()
+    string getPilot()
     {
-        return air_driver;
+        return pilot;
     }
 
     // override exceedsspendinglimit(virtual function in base class)
@@ -90,7 +90,7 @@ public:
         {
             return "Can't be Arrested";
         }
-        else if (obj->designation == "Minister" && obj->exceedsSpendingLimit() == 1)
+        else if (obj->designation == "Minister" && obj->exceedsSpendingLimit())
         {
             return "It can be decided by PM";
         }
@@ -114,14 +114,14 @@ public:
 
 int main()
 {
-    Pm pm1("Narendra Modi", 74, "Ahmedabad", "Gaur", 100000000, "PM", "ABC");
-    MP mp1("Amit Shah", 60, "Nagar", "David", 100000000, "MP");
-    Minister mn1("Rajnath Singh", 65, "patna", "lovish", 10000000, "Minister");
+    Pm pm("Narendra Modi", 74, "Ahmedabad", "Gaur", 100000000, "PM", "ABC");
+    MP mp("Amit Shah", 60, "Nagar", "David", 100000000, "MP");
+    Minister mn("Rajnath Singh", 65, "patna", "lovish", 10000000, "Minister");
     Commissioner com;
 
-    cout << "Can arrest PM: " << com.canArrest(&pm1) << endl;
-    cout << "Can arrest MP: " << com.canArrest(&mp1) << endl;
-    cout << "Can arrest Minister: " << com.canArrest(&mn1) << endl;
+    cout << "Can arrest PM: " << com.canArrest(&pm) << endl;
+    cout << "Can arrest MP: " << com.canArrest(&mp) << endl;
+    cout << "Can arrest Minister: " << com.canArrest(&mn) << endl;
 
     return 0;
 }
